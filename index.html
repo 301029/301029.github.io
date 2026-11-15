@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="zh-CN" data-theme="dark">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Luther.</title>
+<meta name="description" content="Luther. 的个人主页。写点东西，攒点东西。" />
+<meta property="og:title" content="Luther." />
+<meta property="og:description" content="Luther. 的个人主页。写点东西，攒点东西。" />
+<meta name="theme-color" content="#0f1012" />
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%230f1012'/%3E%3Ctext x='32' y='45' font-family='Georgia,serif' font-size='36' fill='%23ece9e4' text-anchor='middle'%3EL%3C/text%3E%3C/svg%3E" />
+<link rel="stylesheet" href="style.css" />
+<script>
+  // 先定主题再渲染，避免白闪一下。没存过就跟系统走。
+  // localStorage 在隐私模式下读一下就抛错，包起来；真抛了就退回跟系统走，别让主题闪。
+  (function () {
+    var saved = null;
+    try {
+      saved = localStorage.getItem('theme');
+    } catch (e) {
+      saved = null;
+    }
+    var dark = saved ? saved === 'dark' : window.matchMedia('(prefers-color-scheme: dark)').matches;
+    document.documentElement.dataset.theme = dark ? 'dark' : 'light';
+  })();
+</script>
+</head>
+<body>
+
+<a class="skip" href="#main">跳到正文</a>
+
+<header class="topbar">
+  <div class="topbar-inner">
+    <a class="brand" href="#top">Luther<span class="brand-dot">.</span></a>
+
+    <nav class="nav" aria-label="页内导航">
+      <a href="#about">关于</a>
+      <a href="#now">现在</a>
+      <a href="#notes">笔记</a>
+      <a href="#works">作品</a>
+    </nav>
+
+    <button class="theme-btn" type="button" data-theme-toggle aria-label="切换深浅色主题">
+      <svg class="icon icon-moon" viewBox="0 0 24 24" aria-hidden="true">
+        <path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 1 0 9.8 9.8Z" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/>
+      </svg>
+      <svg class="icon icon-sun" viewBox="0 0 24 24" aria-hidden="true">
+        <circle cx="12" cy="12" r="4.2" fill="none" stroke="currentColor" stroke-width="1.6"/>
+        <path d="M12 2.6v2.2M12 19.2v2.2M2.6 12h2.2M19.2 12h2.2M5.3 5.3l1.6 1.6M17.1 17.1l1.6 1.6M18.7 5.3l-1.6 1.6M6.9 17.1l-1.6 1.6" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/>
+      </svg>
+    </button>
+  </div>
+</header>
+
+<main id="main">
+
+  <section class="hero" id="top">
+    <div class="wrap">
+      <p class="eyebrow">个人主页</p>
+      <h1>Luther<span class="accent">.</span></h1>
+      <p class="lede">写点东西，攒点东西。</p>
+      <p class="sub">中文 / 记录 / 做了一半的玩意儿</p>
+    </div>
+  </section>
+
+  <section class="section" id="about">
+    <div class="wrap">
+      <p class="eyebrow"><span class="num">01</span>关于</p>
+      <h2>这是个什么地方</h2>
+      <p>这里是 <strong>Luther.</strong> 的个人主页。不放简历，也不接活。</p>
+      <p>写过的、做过的、觉得有意思的，慢慢往这儿搬。现在是房子刚打完地基的样子，能看的还不多。</p>
+      <p class="muted">更新随缘，想到就来。</p>
+    </div>
+  </section>
+
+  <section class="section" id="now">
+    <div class="wrap">
+      <p class="eyebrow"><span class="num">02</span>现在</p>
+      <h2>最近在干什么</h2>
+      <ul class="now">
+        <li>
+          <span class="k">在做</span>
+          <span>这个网站本身，从一张白纸开始搭。</span>
+        </li>
+        <li>
+          <span class="k">在学</span>
+          <span>HTML 和 CSS 的基础，不想靠框架蒙混过去。</span>
+        </li>
+        <li>
+          <span class="k">在想</span>
+          <span>之后要不要换个生成器，认真写点长文。</span>
+        </li>
+      </ul>
+    </div>
+  </section>
+
+  <section class="section" id="notes">
+    <div class="wrap">
+      <p class="eyebrow"><span class="num">03</span>笔记</p>
+      <h2>写过的</h2>
+      <div class="empty">
+        <p>第一批还在草稿箱里躺着。</p>
+        <p class="hint"><span class="tag">在写</span> 写完就贴到这儿来。</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="section" id="works">
+    <div class="wrap">
+      <p class="eyebrow"><span class="num">04</span>作品</p>
+      <h2>做过的</h2>
+      <div class="empty">
+        <p>这儿目前是空的。</p>
+        <p class="hint"><span class="tag">攒着</span> 等项目攒到能见人的程度再往里放。</p>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<footer class="footer">
+  <div class="wrap footer-inner">
+    <p>© <span data-year>2026</span> Luther.</p>
+    <p class="muted">手写 HTML + CSS，没有框架。</p>
+  </div>
+</footer>
+
+<script src="script.js"></script>
+</body>
+</html>

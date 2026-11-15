@@ -1,0 +1,547 @@
+/* ==========================================================================
+   Luther. 个人主页 · 样式表
+   原生 CSS，无框架、无预处理器。变量全在 :root 里，改配色只动这一块。
+   ========================================================================== */
+
+/* --------------------------------------------------------------------------
+   1. 设计变量
+   -------------------------------------------------------------------------- */
+
+:root {
+  /* 排版 */
+  --font-serif: "Iowan Old Style", "Source Han Serif SC", "Noto Serif SC",
+    "Noto Serif CJK SC", "Songti SC", "SimSun", Georgia, serif;
+  --font-sans: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC",
+    "Hiragino Sans GB", "Microsoft YaHei", "Source Han Sans SC", sans-serif;
+  --font-mono: "SFMono-Regular", "Cascadia Mono", Consolas, "Liberation Mono",
+    monospace;
+
+  --leading: 1.75;          /* 正文行高，规矩要求 1.7~1.8 */
+  --leading-tight: 1.25;    /* 标题行高 */
+  --measure: 34rem;         /* 正文最大宽度，约 34 个字一行，眼睛最舒服 */
+
+  /* 尺寸 */
+  --wrap: 44rem;
+  --gap-section: clamp(4.5rem, 11vh, 8rem);
+  --pad-inline: clamp(1.25rem, 5vw, 2rem);
+  --radius: 10px;
+
+  /* 动效 */
+  --ease: cubic-bezier(0.22, 0.61, 0.36, 1);
+  --speed: 0.22s;
+}
+
+/* 深色（默认） ------------------------------------------------------------ */
+:root,
+[data-theme="dark"] {
+  --bg: #0f1012;
+  --bg-soft: #16181b;
+  --bg-raise: #1c1f23;
+  --line: #2a2e34;
+  --line-soft: #21252a;
+
+  --text: #ece9e4;          /* 主文字，偏暖白，不刺眼 */
+  --text-soft: #b3aea6;     /* 次级文字 */
+  --text-dim: #7d7871;      /* 最弱，注释用 */
+
+  --accent: #d9a15b;        /* 暖铜色，唯一强调色 */
+  --accent-soft: rgba(217, 161, 91, 0.14);
+  --accent-line: rgba(217, 161, 91, 0.35);
+
+  --shadow: 0 1px 2px rgba(0, 0, 0, 0.4), 0 8px 24px rgba(0, 0, 0, 0.28);
+  color-scheme: dark;
+}
+
+/* 浅色 ------------------------------------------------------------------- */
+[data-theme="light"] {
+  --bg: #faf8f4;
+  --bg-soft: #f3f0ea;
+  --bg-raise: #ffffff;
+  --line: #ddd8ce;
+  --line-soft: #e9e4da;
+
+  --text: #1e1c19;
+  --text-soft: #56514a;
+  --text-dim: #8a847a;
+
+  --accent: #a96b1c;        /* 浅色底下铜色要压深才够对比 */
+  --accent-soft: rgba(169, 107, 28, 0.15);
+  --accent-line: rgba(169, 107, 28, 0.3);
+
+  --shadow: 0 1px 2px rgba(60, 50, 35, 0.06), 0 8px 24px rgba(60, 50, 35, 0.07);
+  color-scheme: light;
+}
+
+/* --------------------------------------------------------------------------
+   2. 基础重置
+   -------------------------------------------------------------------------- */
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+  scroll-padding-top: 5rem;   /* 锚点跳转别被顶栏盖住 */
+  -webkit-text-size-adjust: 100%;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--font-sans);
+  font-size: 1rem;
+  line-height: var(--leading);
+  /* 中英混排自动加空隙：新版浏览器支持，不支持的靠源码里的手写空格兜底 */
+  text-autospace: normal;
+  text-spacing-trim: space-first;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  transition: background-color var(--speed) var(--ease),
+    color var(--speed) var(--ease);
+}
+
+h1,
+h2,
+h3 {
+  margin: 0;
+  font-family: var(--font-serif);
+  font-weight: 500;
+  line-height: var(--leading-tight);
+  letter-spacing: -0.01em;
+  text-wrap: balance;         /* 标题换行更均匀 */
+}
+
+h2 {
+  font-size: clamp(1.5rem, 4vw, 1.85rem);
+  margin-bottom: 1.1rem;
+}
+
+p {
+  margin: 0 0 1.15rem;        /* 段间留空，不用首行缩进 */
+  max-width: var(--measure);
+  text-wrap: pretty;          /* 避免行尾孤字 */
+}
+
+p:last-child {
+  margin-bottom: 0;
+}
+
+a {
+  color: var(--text);
+  text-decoration-color: var(--line);
+  text-underline-offset: 0.22em;
+  text-decoration-thickness: 1px;
+  transition: color var(--speed) var(--ease),
+    text-decoration-color var(--speed) var(--ease);
+}
+
+a:hover {
+  color: var(--accent);
+  text-decoration-color: var(--accent-line);
+}
+
+strong {
+  font-weight: 600;
+  color: var(--text);
+}
+
+::selection {
+  background: var(--accent-soft);
+  color: var(--text);
+}
+
+:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 3px;
+  border-radius: 3px;
+}
+
+/* --------------------------------------------------------------------------
+   3. 通用件
+   -------------------------------------------------------------------------- */
+
+.wrap {
+  width: 100%;
+  max-width: var(--wrap);
+  margin-inline: auto;
+  padding-inline: var(--pad-inline);
+}
+
+.muted {
+  color: var(--text-dim);
+  font-size: 0.925rem;
+}
+
+.accent {
+  color: var(--accent);
+}
+
+/* 跳过导航，键盘和读屏用 */
+.skip {
+  position: absolute;
+  left: 1rem;
+  top: -100%;
+  z-index: 100;
+  padding: 0.6rem 1rem;
+  background: var(--bg-raise);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  font-size: 0.9rem;
+  text-decoration: none;
+  transition: top var(--speed) var(--ease);
+}
+
+.skip:focus {
+  top: 1rem;
+}
+
+/* 小标签：像「01 关于」那种 */
+.eyebrow {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  margin: 0 0 0.9rem;
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--text-dim);
+}
+
+.eyebrow .num {
+  color: var(--accent);
+  font-variant-numeric: tabular-nums;
+}
+
+/* --------------------------------------------------------------------------
+   4. 顶栏
+   -------------------------------------------------------------------------- */
+
+.topbar {
+  position: sticky;
+  top: 0;
+  z-index: 50;
+  /* 不支持 color-mix 的老浏览器退化成不透明背景，别让顶栏变透明 */
+  background: var(--bg);
+  background: color-mix(in srgb, var(--bg) 82%, transparent);
+  border-bottom: 1px solid transparent;
+  backdrop-filter: blur(14px) saturate(1.4);
+  -webkit-backdrop-filter: blur(14px) saturate(1.4);
+  transition: border-color var(--speed) var(--ease),
+    background-color var(--speed) var(--ease);
+}
+
+/* 往下滚过一点才出现分割线，滚动由 JS 加 .is-scrolled */
+.topbar.is-scrolled {
+  border-bottom-color: var(--line-soft);
+}
+
+.topbar-inner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  width: 100%;
+  max-width: var(--wrap);
+  margin-inline: auto;
+  padding: 0.85rem var(--pad-inline);
+}
+
+.brand {
+  font-family: var(--font-serif);
+  font-size: 1.15rem;
+  letter-spacing: -0.01em;
+  text-decoration: none;
+  color: var(--text);
+}
+
+.brand-dot {
+  color: var(--accent);
+}
+
+.nav {
+  display: flex;
+  gap: clamp(0.9rem, 3vw, 1.6rem);
+  font-size: 0.9rem;
+}
+
+.nav a {
+  color: var(--text-soft);
+  text-decoration: none;
+  padding-block: 0.15rem;
+  border-bottom: 1px solid transparent;
+  transition: color var(--speed) var(--ease),
+    border-color var(--speed) var(--ease);
+}
+
+.nav a:hover,
+.nav a.is-active {
+  color: var(--text);
+  border-bottom-color: var(--accent-line);
+}
+
+/* 主题开关 */
+.theme-btn {
+  display: grid;
+  place-items: center;
+  width: 2.15rem;
+  height: 2.15rem;
+  padding: 0;
+  background: transparent;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  color: var(--text-soft);
+  cursor: pointer;
+  transition: color var(--speed) var(--ease),
+    border-color var(--speed) var(--ease),
+    background-color var(--speed) var(--ease);
+}
+
+.theme-btn:hover {
+  color: var(--accent);
+  border-color: var(--accent-line);
+  background: var(--accent-soft);
+}
+
+.theme-btn .icon {
+  width: 1.05rem;
+  height: 1.05rem;
+  display: block;
+}
+
+/* 深色时显示太阳（点了会变亮），浅色时显示月亮 */
+[data-theme="dark"] .icon-sun,
+[data-theme="light"] .icon-moon {
+  display: none;
+}
+
+/* --------------------------------------------------------------------------
+   5. 首屏
+   -------------------------------------------------------------------------- */
+
+.hero {
+  padding-block: clamp(4rem, 14vh, 8.5rem) clamp(3rem, 8vh, 5rem);
+  border-bottom: 1px solid var(--line-soft);
+}
+
+.hero h1 {
+  font-size: clamp(3.4rem, 13vw, 6.5rem);
+  letter-spacing: -0.035em;
+  margin-bottom: 1.4rem;
+}
+
+.lede {
+  font-family: var(--font-serif);
+  font-size: clamp(1.15rem, 3.2vw, 1.4rem);
+  color: var(--text-soft);
+  max-width: 26rem;
+  margin-bottom: 0.7rem;
+}
+
+.sub {
+  font-family: var(--font-mono);
+  font-size: 0.8rem;
+  letter-spacing: 0.06em;
+  color: var(--text-dim);
+  margin: 0;
+}
+
+/* --------------------------------------------------------------------------
+   6. 内容区块
+   -------------------------------------------------------------------------- */
+
+.section {
+  padding-block: var(--gap-section);
+  border-bottom: 1px solid var(--line-soft);
+}
+
+.section:last-of-type {
+  border-bottom: 0;
+}
+
+/* 「现在」列表 */
+.now {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  max-width: var(--measure);
+}
+
+.now li {
+  display: grid;
+  grid-template-columns: 4.2rem 1fr;
+  gap: 1rem;
+  padding-block: 0.85rem;
+  border-top: 1px solid var(--line-soft);
+}
+
+.now li:last-child {
+  border-bottom: 1px solid var(--line-soft);
+}
+
+.now .k {
+  font-family: var(--font-mono);
+  font-size: 0.78rem;
+  letter-spacing: 0.06em;
+  color: var(--text-dim);
+  padding-top: 0.28rem;      /* 跟右边首行视觉对齐 */
+}
+
+.now span:not(.k) {
+  color: var(--text-soft);
+}
+
+/* 空状态：还没内容时的占位，不做成「暂无数据」那种冷冰冰的样子 */
+.empty {
+  padding: 1.6rem 1.5rem;
+  background: var(--bg-soft);
+  border: 1px dashed var(--line);
+  border-radius: var(--radius);
+  max-width: var(--measure);
+}
+
+.empty p {
+  margin-bottom: 0.55rem;
+  color: var(--text-soft);
+}
+
+.empty p:last-child {
+  margin-bottom: 0;
+}
+
+.empty .hint {
+  font-size: 0.9rem;
+  color: var(--text-dim);
+}
+
+.tag {
+  display: inline-block;
+  margin-right: 0.45rem;
+  padding: 0.1rem 0.45rem;
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  letter-spacing: 0.05em;
+  color: var(--accent);
+  background: var(--accent-soft);
+  border: 1px solid var(--accent-line);
+  border-radius: 4px;
+}
+
+/* --------------------------------------------------------------------------
+   7. 页脚
+   -------------------------------------------------------------------------- */
+
+.footer {
+  padding-block: 2.5rem 3rem;
+  border-top: 1px solid var(--line-soft);
+}
+
+.footer-inner {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: 0.6rem 1.5rem;
+  font-size: 0.875rem;
+  color: var(--text-soft);
+}
+
+.footer p {
+  margin: 0;
+}
+
+/* --------------------------------------------------------------------------
+   8. 响应式
+   -------------------------------------------------------------------------- */
+
+@media (max-width: 640px) {
+  .nav {
+    gap: 0.85rem;
+    font-size: 0.85rem;
+  }
+
+  .topbar-inner {
+    padding-block: 0.7rem;
+  }
+
+  .now li {
+    grid-template-columns: 3.4rem 1fr;
+    gap: 0.75rem;
+  }
+
+  .footer-inner {
+    flex-direction: column;
+  }
+}
+
+/* 极窄屏：导航挤成一行会溢出，改成首屏无导航，靠页脚兜 —— 这里先只缩间距 */
+@media (max-width: 400px) {
+  .brand {
+    font-size: 1rem;
+  }
+
+  .nav {
+    gap: 0.7rem;
+    font-size: 0.8rem;
+  }
+}
+
+/* --------------------------------------------------------------------------
+   9. 进场动画：只做一次，不折腾
+   -------------------------------------------------------------------------- */
+
+@media (prefers-reduced-motion: no-preference) {
+  .hero > .wrap,
+  .section > .wrap {
+    animation: rise 0.6s var(--ease) both;
+    animation-delay: 0.05s;
+  }
+
+  @keyframes rise {
+    from {
+      opacity: 0;
+      transform: translateY(10px);
+    }
+    to {
+      opacity: 1;
+      transform: none;
+    }
+  }
+}
+
+/* --------------------------------------------------------------------------
+   10. 打印：去色、去装饰
+   -------------------------------------------------------------------------- */
+
+@media print {
+  .topbar,
+  .theme-btn,
+  .skip {
+    display: none;
+  }
+
+  body {
+    background: #fff;
+    color: #000;
+  }
+
+  .section {
+    page-break-inside: avoid;
+    padding-block: 1.5rem;
+  }
+}
