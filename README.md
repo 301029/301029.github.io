@@ -1,4 +1,4 @@
-# Luther.
+# luther
 
 个人主页。手写 HTML + CSS，无框架、无构建。
 
